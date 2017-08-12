@@ -38,6 +38,7 @@
     "webpack-merge": "^4.1.0"
   },
   "dependencies": {
+    "bcrypt": "^1.0.2",
     "express": "^4.15.3",
     "vue": "^2.4.2"
   }
