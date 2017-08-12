@@ -22,7 +22,7 @@ const UsersSchema = new Schema({
   timestamps: true
 })
 
-UsersSchema.pre('save', (next) => {
+UsersSchema.pre('save', function(next) {
   const user = this
 
   if (!user.isModified('password')) {

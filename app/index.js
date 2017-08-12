@@ -1,5 +1,6 @@
 const express = require('express')
 const userController = require('./controllers/userController')
+const loginController = require('./controllers/loginController')
 
 const router = express.Router()
 const apiRouter = express.Router()
@@ -14,6 +15,8 @@ userApiRouter
 
 apiRouter
   .use('/user', userApiRouter)
+  .post('/login', loginController.login)
+  .post('/logout', loginController.logout)
 
 router.use('/api', apiRouter)
 router.get('*', (req, res) => res.send('Hello World'))
