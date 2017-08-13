@@ -8,7 +8,7 @@ const CodeTypesSchema = new Schema({
     index: { unique: true }
   },
   platforms: {
-    type: Schema.Types.Array,
+    type: [String],
     required: true,
   }
 })
