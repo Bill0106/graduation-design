@@ -17,7 +17,10 @@ const UsersSchema = new Schema({
     type: Schema.Types.ObjectId,
     required: true,
   },
-  password: String,
+  password: {
+    type: Schema.Types.String,
+    required: true,
+  },
 }, {
   timestamps: true
 })
