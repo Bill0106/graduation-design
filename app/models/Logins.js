@@ -15,6 +15,8 @@ const LoginsSchema = new Schema({
     type: Boolean,
     default: true,
   }
+}, {
+  timestamps: true
 })
 
 LoginsSchema.pre('find', function(next) {
