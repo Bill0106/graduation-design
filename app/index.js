@@ -2,6 +2,7 @@ const express = require('express')
 const userController = require('./controllers/userController')
 const codeTypeController = require('./controllers/codeTypeController')
 const codeController = require('./controllers/codeController')
+const commentController = require('./controllers/commentController')
 const loginController = require('./controllers/loginController')
 
 const router = express.Router()
@@ -9,6 +10,7 @@ const apiRouter = express.Router()
 const userApiRouter = express.Router()
 const codeTypeApiRouter = express.Router()
 const codeApiRouter = express.Router()
+const commentApiRouter = express.Router()
 
 userApiRouter
   .get('/', userController.list)
@@ -30,6 +32,13 @@ codeApiRouter
   .get('/:id', codeController.find)
   .post('/:id', codeController.update)
   .post('/:id/remove', codeController.remove)
+
+commentApiRouter
+  .get('/', commentController.list)
+  .post('/', commentController.create)
+  .get('/:id', commentController.find)
+  .post('/:id', commentController.update)
+  .post('/:id/remove', commentController.remove)
 
 apiRouter
   .use('/users', userApiRouter)
