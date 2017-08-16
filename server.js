@@ -1,5 +1,6 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const session = require('express-session')
 const mongoose = require('mongoose')
 const routes = require('./app')
 const app = express()
@@ -18,6 +19,7 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+app.use(session({ secret: 'graduation design', resave: false, saveUninitialized: true }))
 app.use('/', routes)
 
 app.listen(8888, () => console.log('Listen at http://localhost:8888'))

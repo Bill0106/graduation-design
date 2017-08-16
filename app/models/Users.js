@@ -34,7 +34,7 @@ UsersSchema.pre('save', async function (next) {
     this.password = hash
   }
 
-  if (this.isModified('userRoleId')) {
+  if (this.isModified('userRoleId') && this.userRoleId) {
     const role = await UserRoles.findById(this.userRoleId)
     if (!role) {
       const error = new Error('user role not found')

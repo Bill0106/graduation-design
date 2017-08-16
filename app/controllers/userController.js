@@ -2,7 +2,7 @@ const Users = require('../models/Users')
 const UserRoles = require('../models/UserRoles')
 
 const controller = {
-  list: (req, res) => {},
+  list: async (req, res) => {},
   find: async (req, res) => {
     try {
       const { id } = req.params
@@ -44,9 +44,13 @@ const controller = {
   },
   update: async (req, res) => {
     try {
-      const { id } = req.params
+      const { profile, role } = req.session.user
+      if (role.role !== 'ADMIN' && profile._id !== req.params.id) {
+        throw new Error('no permission')
+      }
+
       const { username, email, password } = req.body
-      const user = await Users.findById(id)
+      const user = await Users.findById(req.params.id)
       if (!user) {
         throw new Error('user not found')
       }
@@ -67,7 +71,9 @@ const controller = {
       })
     }
   },
-  remove: (req, res) => {}
+  remove: (req, res) => {
+    console.log(req.header)
+  }
 }
 
 module.exports = controller
