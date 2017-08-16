@@ -11,7 +11,7 @@ const controller = {
         throw new Error('user not found')
       }
 
-      const isPasswordMatched = await comparePassword(user, password)
+      const isPasswordMatched = await user.comparePassword(password)
       if (!isPasswordMatched) {
         throw new Error('email or password is incorrect')
       }
@@ -39,15 +39,6 @@ const controller = {
     }
   },
   logout: (req, res) => {},
-}
-
-const comparePassword = (user, password) => {
-  return new Promise((resolve, reject) => {
-    user.comparePassword(password, (err, res) => {
-      if (err) reject(err)
-      resolve(res)
-    })
-  })
 }
 
 module.exports = controller

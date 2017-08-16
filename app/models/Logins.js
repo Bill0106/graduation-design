@@ -6,6 +6,7 @@ const LoginsSchema = new Schema({
     type: String,
     required: true,
     index: true,
+    ref: 'Users',
   },
   session: {
     type: String,

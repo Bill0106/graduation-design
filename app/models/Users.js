@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
+const UserRoles = require('./UserRoles')
 const Schema = mongoose.Schema
 
 const UsersSchema = new Schema({
@@ -26,37 +27,26 @@ const UsersSchema = new Schema({
   timestamps: true
 })
 
-UsersSchema.pre('save', function (next) {
-  const user = this
-
-  if (!user.isModified('password')) {
-    return next()
+UsersSchema.pre('save', async function (next) {
+  if (this.isModified('password')) {
+    const salt = bcrypt.genSaltSync(10)
+    const hash = bcrypt.hashSync(this.password, salt)
+    this.password = hash
   }
 
-  bcrypt.genSalt(10, (err, salt) => {
-    if (err) {
-      return next(err)
+  if (this.isModified('userRoleId')) {
+    const role = await UserRoles.findById(this.userRoleId)
+    if (!role) {
+      const error = new Error('user role not found')
+      return next(error)
     }
+  }
 
-    bcrypt.hash(user.password, salt, (err, hash) => {
-      if (err) {
-        return next(err)
-      }
-
-      user.password = hash
-      next()
-    })
-  })
+  return next()
 })
 
-UsersSchema.methods.comparePassword = function (candidatePassword, cb) {
-  bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
-    if (err) {
-      return cb(err)
-    }
-
-    cb(null, isMatch)
-  })
+UsersSchema.methods.comparePassword = function (candidatePassword) {
+  return bcrypt.compare(candidatePassword, this.password)
 }
 
 module.exports = mongoose.model('users', UsersSchema)

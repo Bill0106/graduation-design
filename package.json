@@ -4,7 +4,8 @@
   "description": "My graduation design",
   "main": "server.js",
   "scripts": {
-    "dev-server": "nodemon server.js"
+    "dev-server": "nodemon server.js",
+    "lint-staged": "lint-staged"
   },
   "author": "Bill",
   "license": "MIT",
