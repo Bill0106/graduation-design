@@ -20,7 +20,8 @@ const LoginsSchema = new Schema({
 })
 
 LoginsSchema.pre('find', function(next) {
-  next()
+  const login = this
+  console.log(login)
 })
 
 module.exports = mongoose.model('Logins', LoginsSchema)
