@@ -4,7 +4,7 @@
   "description": "My graduation design",
   "main": "server.js",
   "scripts": {
-    "dev": "node ./build/dev"
+    "dev-server": "nodemon server.js"
   },
   "author": "Bill",
   "license": "MIT",
@@ -39,6 +39,7 @@
   },
   "dependencies": {
     "bcrypt": "^1.0.2",
+    "body-parser": "^1.17.2",
     "express": "^4.15.3",
     "mongoose": "^4.11.6",
     "vue": "^2.4.2"
