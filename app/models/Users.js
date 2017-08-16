@@ -6,27 +6,27 @@ const UsersSchema = new Schema({
   username: {
     type: Schema.Types.String,
     required: true,
-    index: { unique: true },
+    index: { unique: true }
   },
   email: {
     type: Schema.Types.String,
     required: true,
-    index: { unique: true },
+    index: { unique: true }
   },
   userRoleId: {
     type: Schema.Types.ObjectId,
     required: true,
-    ref: 'UserRoles',
+    ref: 'UserRoles'
   },
   password: {
     type: Schema.Types.String,
-    required: true,
-  },
+    required: true
+  }
 }, {
   timestamps: true
 })
 
-UsersSchema.pre('save', function(next) {
+UsersSchema.pre('save', function (next) {
   const user = this
 
   if (!user.isModified('password')) {
@@ -38,7 +38,7 @@ UsersSchema.pre('save', function(next) {
       return next(err)
     }
 
-    bcrypt.hash(user.passwordm, salt, (err, hash) => {
+    bcrypt.hash(user.password, salt, (err, hash) => {
       if (err) {
         return next(err)
       }

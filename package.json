@@ -8,6 +8,17 @@
   },
   "author": "Bill",
   "license": "MIT",
+  "pre-commit": {
+    "run": "lint-staged",
+    "silent": true
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "prettier --single-quote --semi false --write",
+      "git add"
+    ]
+  },
   "devDependencies": {
     "babel-core": "^6.25.0",
     "babel-eslint": "^7.2.3",
