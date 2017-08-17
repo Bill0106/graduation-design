@@ -2,7 +2,29 @@ const Users = require('../models/Users')
 const UserRoles = require('../models/UserRoles')
 
 const controller = {
-  list: async (req, res) => {},
+  list: async (req, res) => {
+    try {
+      const limit = Number(req.query.limit) || 30
+      const page = Number(req.query.page) || 1
+      const offset = (page - 1) * limit
+      const list = await Users.find()
+        .limit(limit)
+        .skip(offset)
+        .select('-password')
+        .populate('userRoleId')
+      const total = await Users.count({})
+
+      res.send({
+        status: 'success',
+        data: { list, total }
+      })
+    } catch (error) {
+      res.send({
+        status: 'error',
+        message: error.message
+      })
+    }
+  },
 
   find: async (req, res) => {
     try {
