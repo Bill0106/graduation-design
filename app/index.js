@@ -15,13 +15,16 @@ const codeTypesApiRouter = express.Router()
 const codesApiRouter = express.Router()
 const commentsApiRouter = express.Router()
 
+const checkAdmin = checkUser(['ADMIN'])
+const checkLogin = checkUser()
+
 usersApiRouter
   .get('/', userController.list)
   .post('/', userController.create)
   .get('/:id', userController.find)
-  .post('/:id', userController.update)
-  .post('/:id/update-role', userController.updateRole)
-  .post('/:id/remove', checkUser('ADMIN'), userController.remove)
+  .post('/:id', checkLogin, userController.update)
+  .post('/:id/update-role', checkAdmin, userController.updateRole)
+  .post('/:id/remove', checkAdmin, userController.remove)
 
 userRolesApiRouter
   .get('/', userRoleController.list)

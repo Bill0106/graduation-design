@@ -7,7 +7,11 @@ const controller = {
       const limit = Number(req.query.limit) || 30
       const page = Number(req.query.page) || 1
       const offset = (page - 1) * limit
-      const list = await Users.find().limit(limit).skip(offset)
+      const list = await Users.find()
+        .limit(limit)
+        .skip(offset)
+        .populate('userRoleId')
+        .select('-password')
       const total = await Users.count({})
 
       res.send({
@@ -26,12 +30,8 @@ const controller = {
     try {
       const { id } = req.params
       const user = await Users.findById(id)
-      if (!user) {
-        res.send({
-          status: 'success',
-          data: null
-        })
-      }
+        .populate('userRoleId')
+        .select('-password')
 
       res.send({
         status: 'success',
@@ -69,6 +69,14 @@ const controller = {
 
   update: async (req, res) => {
     try {
+      const operator = req.locals.user
+      if (
+        operator.userRoleId.role !== 'ADMIN' &&
+        String(operator._id) !== req.params.id
+      ) {
+        throw new Error('no permission')
+      }
+
       const { username, email, password } = req.body
       const user = await Users.findById(req.params.id)
       if (!user) {

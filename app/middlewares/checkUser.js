@@ -1,6 +1,5 @@
-const Users = require('../models/Users')
-const UserRoles = require('../models/UserRoles')
 const Logins = require('../models/Logins')
+const Users = require('../models/Users')
 
 const checkUser = roles => {
   return async (req, res, next) => {
@@ -11,15 +10,13 @@ const checkUser = roles => {
         throw new Error('login required')
       }
 
-      const user = await Users.findById(login.userId)
-      const role = await UserRoles.findById(user.userRoleId)
-      if (roles && !roles.includes(role.role)) {
+      const user = await Users.findById(login.userId).populate('userRoleId')
+      if (roles && !roles.includes(user.userRoleId.role)) {
         throw new Error('no permission')
       }
 
-      req.local.user = user
-      req.local.role = role
-      next('111')
+      req.locals = { user }
+      next()
     } catch (error) {
       res.send({
         status: 'error',

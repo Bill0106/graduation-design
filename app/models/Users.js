@@ -39,15 +39,8 @@ UsersSchema.pre('save', function(next) {
   return next()
 })
 
-function preFind(next) {
-  this.populate('userRoleId').select('-password')
-  return next()
-}
-
-UsersSchema.pre('find', preFind).pre('findOne', preFind)
-
 UsersSchema.methods.comparePassword = function(candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password)
 }
 
-module.exports = mongoose.model('users', UsersSchema)
+module.exports = mongoose.model('Users', UsersSchema)
