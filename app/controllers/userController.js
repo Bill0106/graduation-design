@@ -28,8 +28,7 @@ const controller = {
 
   find: async (req, res) => {
     try {
-      const { id } = req.params
-      const user = await Users.findById(id)
+      const user = await Users.findById(req.params.id)
         .populate('userRoleId')
         .select('-password')
 
