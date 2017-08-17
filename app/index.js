@@ -20,6 +20,7 @@ usersApiRouter
   .post('/', userController.create)
   .get('/:id', userController.find)
   .post('/:id', userController.update)
+  .post('/:id/update-role', userController.updateRole)
   .post('/:id/remove', checkUser('ADMIN'), userController.remove)
 
 userRolesApiRouter

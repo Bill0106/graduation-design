@@ -75,6 +75,32 @@ const controller = {
     }
   },
 
+  updateRole: async (req, res) => {
+    try {
+      const user = await Users.findById(req.params.id)
+      if (!user) {
+        throw new Error('user not found')
+      }
+
+      const role = await UserRoles.findById(req.body.role)
+      if (!role) {
+        throw new Error('user role not found')
+      }
+
+      user.userRoleId = role._id
+      await user.save()
+      res.send({
+        status: 'success',
+        data: null
+      })
+    } catch (error) {
+      res.send({
+        status: 'error',
+        message: error.message
+      })
+    }
+  },
+
   remove: async (req, res) => {
     try {
       await Users.findByIdAndRemove(req.params.id)
