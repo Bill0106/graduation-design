@@ -20,11 +20,13 @@ const CodeTypesSchema = new Schema(
 )
 
 CodeTypesSchema.pre('save', function(next) {
-  const platforms = codeTypePlatforms.map(item => item.value)
-  const diff = this.platforms.filter(item => !platforms.includes(item))
-  if (diff.length) {
-    const error = new Error('platform is incorrect')
-    return next(error)
+  if (this.isModified('platforms')) {
+    const platforms = codeTypePlatforms.map(item => item.value)
+    const diff = this.platforms.filter(item => !platforms.includes(item))
+    if (diff.length) {
+      const error = new Error('platform is incorrect')
+      return next(error)
+    }
   }
 
   next()

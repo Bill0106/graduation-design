@@ -16,6 +16,7 @@ const codesApiRouter = express.Router()
 const commentsApiRouter = express.Router()
 
 const checkAdmin = checkUser(['ADMIN'])
+const checkSuperUser = checkUser(['ADMIN', 'SUPER_USER'])
 const checkLogin = checkUser()
 
 usersApiRouter
@@ -42,10 +43,10 @@ codeTypesApiRouter
 
 codesApiRouter
   .get('/', codeController.list)
-  .post('/', codeController.create)
+  .post('/', checkSuperUser, codeController.create)
   .get('/:id', codeController.find)
-  .post('/:id', codeController.update)
-  .post('/:id/remove', codeController.remove)
+  .post('/:id', checkSuperUser, codeController.update)
+  .post('/:id/remove', checkSuperUser, codeController.remove)
 
 commentsApiRouter
   .get('/', commentController.list)
