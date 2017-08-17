@@ -7,11 +7,7 @@ const controller = {
       const limit = Number(req.query.limit) || 30
       const page = Number(req.query.page) || 1
       const offset = (page - 1) * limit
-      const list = await Users.find()
-        .limit(limit)
-        .skip(offset)
-        .select('-password')
-        .populate('userRoleId')
+      const list = await Users.find().limit(limit).skip(offset)
       const total = await Users.count({})
 
       res.send({
@@ -37,10 +33,9 @@ const controller = {
         })
       }
 
-      const { username, email, userRoleId } = user
       res.send({
         status: 'success',
-        data: { username, email, userRoleId }
+        data: user
       })
     } catch (error) {
       res.send({

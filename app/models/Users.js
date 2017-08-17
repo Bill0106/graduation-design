@@ -29,7 +29,7 @@ const UsersSchema = new Schema(
   }
 )
 
-UsersSchema.pre('save', async function(next) {
+UsersSchema.pre('save', function(next) {
   if (this.isModified('password')) {
     const salt = bcrypt.genSaltSync(10)
     const hash = bcrypt.hashSync(this.password, salt)
@@ -38,6 +38,13 @@ UsersSchema.pre('save', async function(next) {
 
   return next()
 })
+
+function preFind(next) {
+  this.populate('userRoleId').select('-password')
+  return next()
+}
+
+UsersSchema.pre('find', preFind).pre('findOne', preFind)
 
 UsersSchema.methods.comparePassword = function(candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password)
