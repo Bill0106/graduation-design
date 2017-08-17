@@ -2,35 +2,31 @@ const Users = require('../models/Users')
 const UserRoles = require('../models/UserRoles')
 const Logins = require('../models/Logins')
 
-const checkUser = async (req, userId) => {
-  const session = req.headers['x-token']
-  const login = await Logins.findOne({ session, valid: true })
-  if (!login) {
-    return {
-      checked: false,
-      message: 'login required'
+const checkUser = roles => {
+  return async (req, res, next) => {
+    try {
+      const token = req.headers['x-token']
+      const login = await Logins.findOne({ session: token, valid: true })
+      if (!login) {
+        throw new Error('login required')
+      }
+
+      const user = await Users.findById(login.userId)
+      const role = await UserRoles.findById(user.userRoleId)
+      if (roles && !roles.includes(role.role)) {
+        throw new Error('no permission')
+      }
+
+      req.local.user = user
+      req.local.role = role
+      next('111')
+    } catch (error) {
+      res.send({
+        status: 'error',
+        message: error.message
+      })
     }
   }
-
-  const user = await Users.findById(login.userId)
-  const role = await UserRoles.findById(user.userRoleId)
-  let hasPermission = false
-  if (role.role === 'ADMIN') {
-    hasPermission = true
-  }
-
-  if (userId && userId === user._id) {
-    hasPermission = true
-  }
-
-  if (!hasPermission) {
-    return {
-      checked: false,
-      message: 'no permission'
-    }
-  }
-
-  return { checked: true }
 }
 
 module.exports = checkUser

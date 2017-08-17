@@ -1,4 +1,5 @@
 const express = require('express')
+const checkUser = require('./middlewares/checkUser')
 const userController = require('./controllers/userController')
 const userRoleController = require('./controllers/userRoleController')
 const codeTypeController = require('./controllers/codeTypeController')
@@ -19,7 +20,7 @@ usersApiRouter
   .post('/', userController.create)
   .get('/:id', userController.find)
   .post('/:id', userController.update)
-  .post('/:id/remove', userController.remove)
+  .post('/:id/remove', checkUser('ADMIN'), userController.remove)
 
 userRolesApiRouter
   .get('/', userRoleController.list)
