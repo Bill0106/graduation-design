@@ -3,6 +3,7 @@ const UserRoles = require('../models/UserRoles')
 
 const controller = {
   list: async (req, res) => {},
+
   find: async (req, res) => {
     try {
       const { id } = req.params
@@ -26,11 +27,17 @@ const controller = {
       })
     }
   },
+
   create: async (req, res) => {
     try {
       const { username, email, password } = req.body
       const userRole = await UserRoles.findOne({ role: 'USER' })
-      await Users.create({ username, email, password, userRoleId: userRole._id })
+      await Users.create({
+        username,
+        email,
+        password,
+        userRoleId: userRole._id
+      })
       res.send({
         status: 'success',
         data: null
@@ -42,13 +49,9 @@ const controller = {
       })
     }
   },
+
   update: async (req, res) => {
     try {
-      const { profile, role } = req.session.user
-      if (role.role !== 'ADMIN' && profile._id !== req.params.id) {
-        throw new Error('no permission')
-      }
-
       const { username, email, password } = req.body
       const user = await Users.findById(req.params.id)
       if (!user) {
@@ -71,8 +74,20 @@ const controller = {
       })
     }
   },
-  remove: (req, res) => {
-    console.log(req.header)
+
+  remove: async (req, res) => {
+    try {
+      await Users.findByIdAndRemove(req.params.id)
+      res.send({
+        status: 'success',
+        data: null
+      })
+    } catch (error) {
+      res.send({
+        status: 'error',
+        message: error.message
+      })
+    }
   }
 }
 
