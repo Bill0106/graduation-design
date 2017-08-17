@@ -28,10 +28,10 @@ usersApiRouter
 
 userRolesApiRouter
   .get('/', userRoleController.list)
-  .post('/', userRoleController.create)
+  .post('/', checkAdmin, userRoleController.create)
   .get('/:id', userRoleController.find)
-  .post('/:id', userRoleController.update)
-  .post('/:id/remove', userRoleController.remove)
+  .post('/:id', checkAdmin, userRoleController.update)
+  .post('/:id/remove', checkAdmin, userRoleController.remove)
 
 codeTypesApiRouter
   .get('/', codeTypeController.list)
