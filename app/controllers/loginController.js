@@ -38,7 +38,29 @@ const controller = {
       })
     }
   },
-  logout: (req, res) => {},
+
+  logout: async (req, res) => {
+    try {
+      const token = req.headers['x-token']
+      const login = await Logins.findOne({ session: token, valid: true })
+      if (!login) {
+        throw new Error('login profile not found')
+      }
+
+      login.valid = false
+      await login.save()
+
+      res.send({
+        status: 'success',
+        data: null
+      })
+    } catch (error) {
+      res.send({
+        status: 'error',
+        message: error.message
+      })
+    }
+  }
 }
 
 module.exports = controller
