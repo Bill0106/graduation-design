@@ -8,12 +8,14 @@ module.exports = {
     app: './main.js'
   },
   output: {
-    path: path.join(__dirname, '../', 'public/dist')
+    path: path.join(__dirname, '../', 'public/dist'),
+    filename: '[name].js',
+    publicPath: '/'
   },
   resolve: {
     extensions: ['.js', '.vue', '.scss', '.css'],
     alias: {
-      'vue$': 'vue/dist/vue.esm.js',
+      vue$: 'vue/dist/vue.esm.js',
       '@': context
     }
   },

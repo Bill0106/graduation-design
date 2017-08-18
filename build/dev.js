@@ -1,4 +1,3 @@
-const path = require('path')
 const express = require('express')
 const proxy = require('express-http-proxy')
 const webpack = require('webpack')
@@ -9,26 +8,28 @@ compiler.apply()
 
 const devMiddleware = require('webpack-dev-middleware')(compiler, {
   publicPath: config.publicPath,
-  quiet: true,
-  inline: true,
+  quiet: true
 })
 const hotMiddleware = require('webpack-hot-middleware')(compiler, {
-  log: () => {}
+  log: false,
+  heartbeat: 2000
 })
 
 const historyApiFallback = require('connect-history-api-fallback')()
 const port = 8080
-const proxyIP = '127.0.0.1'
 const app = express()
 
 app.use(historyApiFallback)
 app.use(devMiddleware)
 app.use(hotMiddleware)
-app.use('/api/*', proxy(`http://${proxyIP}:8888/api`, {
-  forwardPath: function (req, res) {
-    return req.originalUrl
-  }
-}))
+app.use(
+  '/api/*',
+  proxy('http://127.0.0.1:8888/api', {
+    forwardPath: function(req, res) {
+      return req.originalUrl
+    }
+  })
+)
 
 app.listen(port, function(err) {
   if (err) {
