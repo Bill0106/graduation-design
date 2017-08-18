@@ -1,9 +1,19 @@
 <template>
-  <div>Hello aaaad</div>
+  <div>
+    <navbar></navbar>
+    <div class="container">
+      <router-view></router-view>
+    </div>
+  </div>
 </template>
 
 <script>
+import Navbar from './components/navbar'
+
 export default {
-  name: 'app'
+  name: 'app',
+  components: {
+    'Navbar': Navbar
+  }
 }
 </script>
