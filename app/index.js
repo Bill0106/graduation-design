@@ -50,10 +50,10 @@ codesApiRouter
 
 commentsApiRouter
   .get('/', commentController.list)
-  .post('/', commentController.create)
+  .post('/', checkLogin, commentController.create)
   .get('/:id', commentController.find)
-  .post('/:id', commentController.update)
-  .post('/:id/remove', commentController.remove)
+  .post('/:id', checkLogin, commentController.update)
+  .post('/:id/remove', checkLogin, commentController.remove)
 
 apiRouter
   .use('/users', usersApiRouter)
