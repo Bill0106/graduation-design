@@ -62,6 +62,7 @@ apiRouter
   .use('/codes', codesApiRouter)
   .post('/login', loginController.login)
   .post('/logout', loginController.logout)
+  .post('/check-user', loginController.check)
 
 router.use('/api', apiRouter)
 router.get('*', (req, res) => res.send('Hello World'))

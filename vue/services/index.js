@@ -12,8 +12,8 @@ class Services {
     axios.defaults.baseURL = '/api'
     axios.interceptors.response.use(
       response => {
-        const { data } = response
-        if (data.status === 'error') {
+        const { data, config } = response
+        if (data.status === 'error' && config.url !== '/api/check-user') {
           Message.error(data.message)
         }
         return response
@@ -24,12 +24,20 @@ class Services {
     )
   }
 
+  signup(params) {
+    return axios.post('/users', params)
+  }
+
   login(params) {
     return axios.post('/login', params)
   }
 
-  signup(params) {
-    return axios.post('/users', params)
+  logout() {
+    return axios.post('/logout')
+  }
+
+  checkUser() {
+    return axios.post('/check-user')
   }
 }
 

@@ -60,6 +60,40 @@ const controller = {
         message: error.message
       })
     }
+  },
+
+  check: async (req, res) => {
+    try {
+      const token = req.headers['x-token']
+      const login = await Logins.findOne({ session: token })
+      if (!login) {
+        throw new Error('login profile not found')
+      }
+
+      if (!login.valid) {
+        throw new Error('login session outdated')
+      }
+
+      const user = await Users.findById(login.userId)
+        .populate('userRoleId')
+        .select('-password')
+
+      res.send({
+        status: 'success',
+        data: {
+          user: {
+            username: user.username,
+            email: user.email,
+            role: user.userRoleId.role
+          }
+        }
+      })
+    } catch (error) {
+      res.send({
+        status: 'error',
+        message: error.message
+      })
+    }
   }
 }
 
