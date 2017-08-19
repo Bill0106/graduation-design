@@ -25,7 +25,7 @@ app.use(hotMiddleware)
 app.use(
   '/api/*',
   proxy('http://127.0.0.1:8888/api', {
-    forwardPath: function(req, res) {
+    proxyReqPathResolver: function(req, res) {
       return req.originalUrl
     }
   })
