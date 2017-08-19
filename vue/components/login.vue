@@ -1,11 +1,11 @@
 <template>
   <div class="login">
     <el-card class="login-box-card">
-      <el-form>
-        <el-form-item label="邮箱" :model="form">
+      <el-form :model="form">
+        <el-form-item label="邮箱">
           <el-input v-model="form.email"></el-input>
         </el-form-item>
-        <el-form-item label="密码" :model="form">
+        <el-form-item label="密码">
           <el-input v-model="form.password" type="password"></el-input>
         </el-form-item>
         <el-form-item>
@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import Cookie from 'js-cookie'
 import services from '@/services'
 
 export default {
@@ -32,7 +33,19 @@ export default {
   methods: {
     handleSubmit() {
       services.login(this.form)
-        .then(res => console.log(res))
+        .then(res => {
+          const { data } = res
+          if (data.status === 'success') {
+            Cookie.set('token', data.data.token, { expires: 7 })
+            location.href = '/'
+          }
+        })
+    }
+  },
+  beforeMount() {
+    if (Cookie.get('token')) {
+      Cookie.remove('token')
+      location.reload()
     }
   }
 }

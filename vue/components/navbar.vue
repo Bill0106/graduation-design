@@ -5,7 +5,7 @@
       <div class="navbar-right">
         <span class="navbar-right-btn" @click="$router.push({ name: 'login' })">登录</span>
         <i>|</i>
-        <span class="navbar-right-btn">注册</span>
+        <span class="navbar-right-btn" @click="$router.push({ name: 'signup' })">注册</span>
       </div>
     </div>
   </nav>
