@@ -1,25 +1,23 @@
 <template>
-  <div class="signup">
-    <el-card class="signup-box-card">
-      <el-form :model="form" :rules="rules" ref="signupForm">
-        <el-form-item label="用户名" prop="username">
-          <el-input v-model="form.username"></el-input>
-        </el-form-item>
-        <el-form-item label="邮箱" prop="email">
-          <el-input v-model="form.email"></el-input>
-        </el-form-item>
-        <el-form-item label="密码" prop="password">
-          <el-input v-model="form.password" type="password"></el-input>
-        </el-form-item>
-        <el-form-item label="确认密码" prop="confirmPassword">
-          <el-input v-model="form.confirmPassword" type="password"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" size="large" @click="handleSubmit">注册</el-button>
-        </el-form-item>
-      </el-form>
-    </el-card>
-  </div>
+  <el-card class="box-card">
+    <el-form :model="form" :rules="rules" ref="signupForm">
+      <el-form-item label="用户名" prop="username">
+        <el-input v-model="form.username"></el-input>
+      </el-form-item>
+      <el-form-item label="邮箱" prop="email">
+        <el-input v-model="form.email"></el-input>
+      </el-form-item>
+      <el-form-item label="密码" prop="password">
+        <el-input v-model="form.password" type="password"></el-input>
+      </el-form-item>
+      <el-form-item label="确认密码" prop="confirmPassword">
+        <el-input v-model="form.confirmPassword" type="password"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" size="large" @click="handleSubmit">注册</el-button>
+      </el-form-item>
+    </el-form>
+  </el-card>
 </template>
 
 <script>
