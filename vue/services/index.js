@@ -24,6 +24,10 @@ class Services {
     )
   }
 
+  getUsers() {
+    return axios.get('/users')
+  }
+
   signup(params) {
     return axios.post('/users', params)
   }

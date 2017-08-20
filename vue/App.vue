@@ -38,7 +38,6 @@ export default {
           this.user = data.data.user
         }
       })
-    console.log(this.$route.name)
   }
 }
 </script>
