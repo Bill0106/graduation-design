@@ -5,6 +5,7 @@ import Signup from '@/components/signup'
 import CodeForm from '@/components/code-form'
 import Admin from '@/components/admin'
 import AdminUsers from '@/components/admin-users'
+import AdminUserRoles from '@/components/admin-user-roles'
 import AdminCodeTypes from '@/components/admin-code-types'
 
 Vue.use(Router)
@@ -37,6 +38,11 @@ export default new Router({
           path: 'users',
           name: 'adminUsers',
           component: AdminUsers
+        },
+        {
+          path: 'user-roles',
+          name: 'adminUserRoles',
+          component: AdminUserRoles
         },
         {
           path: 'code-types',

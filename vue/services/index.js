@@ -44,6 +44,22 @@ class Services {
     return axios.post('/check-user')
   }
 
+  getUserRoles() {
+    return axios.get('/user-roles')
+  }
+
+  createUserRole(userRole) {
+    return axios.post('/user-roles', userRole)
+  }
+
+  updateUserRole(id, userRole) {
+    return axios.post(`/user-roles/${id}`, userRole)
+  }
+
+  deleteUserRole(id) {
+    return axios.post(`/user-roles/${id}/remove`)
+  }
+
   getCodeTypes() {
     return axios.get('/code-types')
   }
