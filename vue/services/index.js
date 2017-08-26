@@ -43,6 +43,22 @@ class Services {
   checkUser() {
     return axios.post('/check-user')
   }
+
+  getCodeTypes() {
+    return axios.get('/code-types')
+  }
+
+  createCodeType(codeType) {
+    return axios.post('/code-types', codeType)
+  }
+
+  updateCodeType(id, codeType) {
+    return axios.post(`/code-types/${id}`, codeType)
+  }
+
+  deleteCodeType(id) {
+    return axios.post(`/code-types/${id}/remove`)
+  }
 }
 
 export default new Services()
