@@ -24,10 +24,6 @@ class Services {
     )
   }
 
-  getUsers() {
-    return axios.get('/users')
-  }
-
   signup(params) {
     return axios.post('/users', params)
   }
@@ -42,6 +38,14 @@ class Services {
 
   checkUser() {
     return axios.post('/check-user')
+  }
+
+  getUsers() {
+    return axios.get('/users')
+  }
+
+  changeUserRole(id, role) {
+    return axios.post(`/users/${id}/update-role`, { role })
   }
 
   getUserRoles() {

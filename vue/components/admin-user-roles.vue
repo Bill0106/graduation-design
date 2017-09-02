@@ -34,7 +34,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer">
-        <el-button @click="dialogVisible === false">取消</el-button>
+        <el-button @click="dialogVisible = false">取消</el-button>
         <el-button type="primary" :loading="isSaving" @click="handleSubmit">提交</el-button>
       </div>
     </el-dialog>
