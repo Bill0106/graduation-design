@@ -35,7 +35,7 @@ export default {
           const { data } = res
           if (data.status === 'success') {
             Cookie.set('token', data.data.token, { expires: 7 })
-            location.href = '/'
+            window.location = '/'
           }
         })
     }

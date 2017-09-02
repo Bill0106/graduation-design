@@ -13,8 +13,8 @@
             {{user.username}} <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="create">创建代码</el-dropdown-item>
-            <el-dropdown-item command="admin">管理后台</el-dropdown-item>
+            <el-dropdown-item v-if="user.role !== 'USER'" command="create">创建代码</el-dropdown-item>
+            <el-dropdown-item v-if="user.role === 'ADMIN'" command="admin">管理后台</el-dropdown-item>
             <el-dropdown-item command="logout">登出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -29,18 +29,18 @@ import services from '@/services'
 
 export default {
   name: 'navbar',
-  props: {
-    user: Object
+  data() {
+    return {
+      user: null
+    }
   },
   methods: {
-    handleCommand(command) {
+    async handleCommand(command) {
       switch (command) {
         case 'logout':
-          services.logout()
-            .then(res => {
-              Cookie.remove('token')
-              location.reload()
-            })
+          await services.logout()
+          Cookie.remove('token')
+          location.reload()
           break
         case 'admin':
           this.$router.push({ name: 'admin' })
@@ -48,6 +48,13 @@ export default {
         default:
           break
       }
+    }
+  },
+  async beforeMount() {
+    const res = await services.checkUser()
+    const { data } = res
+    if (data.status === 'success') {
+      this.user = data.data.user
     }
   }
 }

@@ -14,7 +14,24 @@
 </template>
 
 <script>
+import services from '@/services'
+
 export default {
-  name: 'admin'
+  name: 'admin',
+  async beforeRouteEnter(to, from, next) {
+    const res = await services.checkUser()
+    const { data } = res
+
+    if (data.status === 'success') {
+      const user = data.data.user
+      if (user.role === 'ADMIN') {
+        next()
+      } else {
+        window.location = '/'
+      }
+    } else {
+      window.location = '/login'
+    }
+  }
 }
 </script>
