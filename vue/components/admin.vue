@@ -5,6 +5,7 @@
       <el-menu-item index="/admin/user-roles">用户组</el-menu-item>
       <el-menu-item index="/admin/codes">代码内容</el-menu-item>
       <el-menu-item index="/admin/code-types">代码类型</el-menu-item>
+      <el-menu-item index="/">返回首页</el-menu-item>
     </el-menu>
     <div class="admin-content">
       <router-view></router-view>
