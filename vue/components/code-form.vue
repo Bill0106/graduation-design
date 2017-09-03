@@ -18,7 +18,7 @@
         <el-input type="textarea" v-model="code.code" :autosize="{ minRows: 5 }"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary">提交</el-button>
+        <el-button type="primary" @click="handleSubmit" :loading="isSaving">提交</el-button>
         <el-button @click="$router.push({ name: 'index' })">取消</el-button>
       </el-form-item>
     </el-form>
@@ -56,17 +56,34 @@ export default {
           label: '移动端',
           value: 'MOBILE'
         }
-      ]
+      ],
+      isSaving: false
     }
   },
-  beforeMount() {
-    services.getCodeTypes()
-      .then(res => {
-        const { data } = res
-        if (data.status === 'success') {
-          this.codeTypes = data.data.list
+  computed: {
+    filteredCodeTypes() {
+      return this.codeTypes.map(item => {
+        return {
+          value: item._id,
+          label: item.name
         }
       })
+    }
+  },
+  methods: {
+    async handleSubmit() {
+      this.isSaving = true
+
+      await services.createCode(this.code)
+      this.isSaving = false
+    }
+  },
+  async beforeMount() {
+    const res = await services.getCodeTypes()
+    const { data } = res
+    if (data.status === 'success') {
+      this.codeTypes = data.data.list
+    }
   }
 }
 </script>

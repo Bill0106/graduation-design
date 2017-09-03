@@ -45,6 +45,9 @@ export default {
         case 'admin':
           this.$router.push({ name: 'admin' })
           break
+        case 'create':
+          this.$router.push({ name: 'codeCreate' })
+          break
         default:
           break
       }

@@ -79,6 +79,10 @@ class Services {
   deleteCodeType(id) {
     return axios.post(`/code-types/${id}/remove`)
   }
+
+  createCode(code) {
+    return axios.post('/codes', code)
+  }
 }
 
 export default new Services()
