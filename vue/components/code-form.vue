@@ -2,12 +2,12 @@
   <el-card class="box-card full-width">
     <el-form :model="code" label-width="80px">
       <el-form-item label="代码类型">
-        <el-select v-model="code.codeType">
+        <el-select v-model="code.codeTypeId">
           <el-option v-for="(item, index) in codeTypes" :key="index" :label="item.name" :value="item._id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="应用场景">
-        <el-checkbox-group v-model="code.platforms">
+        <el-checkbox-group v-model="code.codePlatforms">
           <el-checkbox v-for="(item, index) in platforms" :label="item.value" :key="index">{{item.label}}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
@@ -36,8 +36,8 @@ export default {
       code: {
         title: '',
         code: '',
-        codeType: '',
-        platforms: []
+        codeTypeId: '',
+        codePlatforms: []
       },
       platforms: [
         {
@@ -74,8 +74,13 @@ export default {
     async handleSubmit() {
       this.isSaving = true
 
-      await services.createCode(this.code)
+      const res = await services.createCode(this.code)
+      const { data } = res
+
       this.isSaving = false
+      if (data.status === 'success') {
+        this.$router.push({ name: 'index' })
+      }
     }
   },
   async beforeMount() {

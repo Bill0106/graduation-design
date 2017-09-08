@@ -80,6 +80,11 @@ class Services {
     return axios.post(`/code-types/${id}/remove`)
   }
 
+  getCodes(params) {
+    const { limit, page } = params
+    return axios.get(`/codes?limit=${limit}&page=${page}`)
+  }
+
   createCode(code) {
     return axios.post('/codes', code)
   }

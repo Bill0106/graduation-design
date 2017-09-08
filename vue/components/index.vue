@@ -20,10 +20,10 @@
         </el-option>
       </el-select>
     </div>
-    <div class="index-list-item" v-for="(item, key) in codeList" :key="key">
+    <div class="index-list-item" v-for="(item, key) in filteredList" :key="key">
       <div class="index-list-item-content">
         <p>
-          <span>{{item.user}}</span>
+          <span>{{item.username}}</span>
           <i>/</i>
           <span>{{item.title}}</span>
         </p>
@@ -35,7 +35,7 @@
       </div>
       <div class="index-list-item-comments">
         <i class="material-icons">mode_comment</i>
-        <span>{{item.comments}}</span>
+        <span>{{item.comments || 0}}</span>
       </div>
     </div>
     <div class="index-list-page">
@@ -45,40 +45,15 @@
 </template>
 
 <script>
+import moment from 'moment'
+import services from '@/services'
+
 export default {
   name: 'index',
   data() {
     return {
-      codeList: [
-        {
-          title: 'fuck-you-world',
-          user: 'bill_lord',
-          type: 'JavaScript',
-          comments: 100,
-          createdAt: '2017-09-02'
-        },
-        {
-          title: 'kill-those-lovers',
-          user: 'bill_lord',
-          type: 'JavaScript',
-          comments: 50,
-          createdAt: '2017-09-02'
-        },
-        {
-          title: 'fire-fire-fire',
-          user: 'bill_lord',
-          type: 'JavaScript',
-          comments: 3,
-          createdAt: '2017-09-02'
-        },
-        {
-          title: 'god-damn-idiot',
-          user: 'bill_lord',
-          type: 'JavaScript',
-          comments: 32,
-          createdAt: '2017-09-02'
-        }
-      ],
+      codeList: [],
+      total: 0,
       codeType: '',
       codeTypes: [
         {
@@ -116,16 +91,45 @@ export default {
           label: '移动端',
           value: 'MOBILE'
         }
-      ]
+      ],
+      isFetching: false
+    }
+  },
+  computed: {
+    filteredList() {
+      return this.codeList.map(item => {
+        return {
+          title: item.title,
+          username: item.userId.username,
+          type: item.codeTypeId.name,
+          createdAt: moment(item.createdAt).format('YYYY-MM-DD'),
+          comments: 0
+        }
+      })
     }
   },
   methods: {
+    async fetchList() {
+      this.isFetching = true
+
+      const res = await services.getCodes({ limit: 30, page: 1 })
+      const { data } = res
+
+      this.isFetching = false
+      if (data.status === 'success') {
+        this.codeList = data.data.list
+        this.total = data.data.total
+      }
+    },
     handleCodeTypeChange(value) {
       console.log(value)
     },
     handlePlatformChange(value) {
       console.log(value)
     }
+  },
+  beforeMount() {
+    this.fetchList()
   }
 }
 </script>

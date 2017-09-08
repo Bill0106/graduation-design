@@ -8,7 +8,11 @@ const controller = {
       const page = Number(req.query.page) || 1
       const offset = (page - 1) * limit
 
-      const list = await Codes.find().limit(limit).skip(offset).populate('codeTypeId').populate('userId')
+      const list = await Codes.find()
+        .limit(limit)
+        .skip(offset)
+        .populate('codeTypeId', 'name')
+        .populate('userId', 'username')
       const count = await Codes.count({})
 
       res.send({
@@ -25,7 +29,9 @@ const controller = {
 
   find: async (req, res) => {
     try {
-      const code = await Codes.findById(req.params.id).populate('codeTypeId').populate('userId')
+      const code = await Codes.findById(req.params.id)
+        .populate('codeTypeId')
+        .populate('userId')
 
       res.send({
         status: 'success',
@@ -121,7 +127,7 @@ const controller = {
         message: error.message
       })
     }
-  },
+  }
 }
 
 module.exports = controller
