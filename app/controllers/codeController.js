@@ -30,8 +30,8 @@ const controller = {
   find: async (req, res) => {
     try {
       const code = await Codes.findById(req.params.id)
-        .populate('codeTypeId')
-        .populate('userId')
+        .populate('codeTypeId', 'name')
+        .populate('userId', 'username')
 
       res.send({
         status: 'success',

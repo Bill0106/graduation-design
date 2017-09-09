@@ -85,6 +85,10 @@ class Services {
     return axios.get(`/codes?limit=${limit}&page=${page}`)
   }
 
+  getCode(id) {
+    return axios.get(`/codes/${id}`)
+  }
+
   createCode(code) {
     return axios.post('/codes', code)
   }

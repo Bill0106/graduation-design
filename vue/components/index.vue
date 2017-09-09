@@ -25,7 +25,7 @@
         <p>
           <span>{{item.username}}</span>
           <i>/</i>
-          <span>{{item.title}}</span>
+          <span @click="handleCodeTitleClick(item)">{{item.title}}</span>
         </p>
         <div>
           <span>{{item.type}}</span>
@@ -99,6 +99,7 @@ export default {
     filteredList() {
       return this.codeList.map(item => {
         return {
+          id: item._id,
           title: item.title,
           username: item.userId.username,
           type: item.codeTypeId.name,
@@ -126,6 +127,9 @@ export default {
     },
     handlePlatformChange(value) {
       console.log(value)
+    },
+    handleCodeTitleClick(code) {
+      this.$router.push({ name: 'codeDetail', params: { id: code.id } })
     }
   },
   beforeMount() {

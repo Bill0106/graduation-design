@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Index from '@/components/index'
 import Login from '@/components/login'
 import Signup from '@/components/signup'
+import CodeDetail from '@/components/code-detail'
 import CodeForm from '@/components/code-form'
 import Admin from '@/components/admin'
 import AdminUsers from '@/components/admin-users'
@@ -19,6 +20,11 @@ export default new Router({
       path: '/',
       name: 'index',
       component: Index
+    },
+    {
+      path: '/code/:id',
+      name: 'codeDetail',
+      component: CodeDetail
     },
     {
       path: '/create',

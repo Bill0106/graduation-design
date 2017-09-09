@@ -80,6 +80,40 @@ nav.navbar .container
   margin-top: 20px
   text-align: center
 
+.code-detail-title, .code-comment-title
+  > span, > i, > p
+    display: inline-block
+    vertical-align: middle
+    line-height: 20px
+    font-size: 14px
+  > span
+    color: #0366d6
+    cursor: pointer
+  > i
+    font-style: normal
+  > p
+    margin: 0
+.code-detail-content
+  margin: 0
+  > code
+    padding: 20px
+    border-radius: 3px
+.code-detail-time
+  font-size: 12px
+  color: #999
+.code-comment-title
+  margin-bottom: 20px
+  > p
+    color: #666
+.code-comment-content > p
+  margin: 0
+  font-size: 14px
+  & + p
+    margin-top: 10px
+.code-comment-submit
+  margin-top: 10px
+  text-align: right
+
 .admin-menu
   position: fixed
   top: 0
