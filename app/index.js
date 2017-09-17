@@ -60,6 +60,7 @@ apiRouter
   .use('/user-roles', userRolesApiRouter)
   .use('/code-types', codeTypesApiRouter)
   .use('/codes', codesApiRouter)
+  .use('/comments', commentsApiRouter)
   .post('/login', loginController.login)
   .post('/logout', loginController.logout)
   .post('/check-user', loginController.check)

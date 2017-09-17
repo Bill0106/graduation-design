@@ -1,6 +1,6 @@
 <template>
   <div class="code-detail">
-    <el-card class="box-card full-width">
+    <el-card class="box-card full-width" v-loading.body="isCodeFetching">
       <div class="code-detail-title">
         <span>{{username}}</span>
         <i>/</i>
@@ -11,37 +11,14 @@
       </pre>
       <div class="code-detail-time">创建于 {{createAt}}</div>
     </el-card>
-    <el-card class="box-card full-width">
+    <el-card v-for="item in filteredComments" class="box-card full-width" :key="item._id">
       <div class="code-comment-title">
-        <span>user</span>
+        <span>{{item.userId.username}}</span>
         <i>·</i>
-        <p>评论于 2017-12-01 10:00:00</p>
+        <p>评论于 {{item.createdAt}}</p>
       </div>
       <div class="code-comment-content">
-        <p>太棒了这段代码，谢谢楼主</p>
-        <p>太棒了这段代码，谢谢楼主</p>
-      </div>
-    </el-card>
-    <el-card class="box-card full-width">
-      <div class="code-comment-title">
-        <span>user</span>
-        <i>·</i>
-        <p>评论于 2017-12-01 10:00:00</p>
-      </div>
-      <div class="code-comment-content">
-        <p>太棒了这段代码，谢谢楼主</p>
-        <p>太棒了这段代码，谢谢楼主</p>
-      </div>
-    </el-card>
-    <el-card class="box-card full-width">
-      <div class="code-comment-title">
-        <span>user</span>
-        <i>·</i>
-        <p>评论于 2017-12-01 10:00:00</p>
-      </div>
-      <div class="code-comment-content">
-        <p>太棒了这段代码，谢谢楼主</p>
-        <p>太棒了这段代码，谢谢楼主</p>
+        <p v-for="(p, key) in item.content" :key="key">{{p}}</p>
       </div>
     </el-card>
     <el-card class="box-card full-width">
@@ -68,8 +45,13 @@ export default {
   data() {
     return {
       code: {},
+      comments: [],
       comment: '',
-      isFetching: false
+      currentPage: 1,
+      limit: 10,
+      isCodeFetching: false,
+      isCommentsFetching: false,
+      isSaving: false
     }
   },
   computed: {
@@ -84,6 +66,14 @@ export default {
     createAt() {
       const { createdAt } = this.code
       return createdAt ? moment(createdAt).format('YYYY-MM-DD HH:mm:ss') : ''
+    },
+    filteredComments() {
+      return this.comments.map(item => {
+        return Object.assign({}, item, {
+          content: item.content.split(/\r?\n/).map(i => i.trim()),
+          createdAt: moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss')
+        })
+      })
     }
   },
   directives: {
@@ -105,19 +95,36 @@ export default {
     }
   },
   methods: {
-    handleCommitSubmit() {
-      console.log(this.comment)
+    async fetchComments() {
+      this.isCommentsFetching = true
+      const res = await services.getComments({
+        limit: this.limit,
+        page: this.currentPage,
+        codeId: this.code._id
+      })
+      const { data } = res
+
+      this.isCommentsFetching = false
+      if (data.status === 'success') {
+        this.comments = data.data.list
+      }
+    },
+    async handleCommitSubmit() {
+      this.isSaving = true
+      await services.createComment({ content: this.comment, codeId: this.code._id })
+      this.isSaving = false
     }
   },
   async beforeMount() {
-    this.isFetching = true
+    this.isCodeFetching = true
     const { id } = this.$route.params
     const res = await services.getCode(id)
     const { data } = res
 
-    this.isFetching = false
+    this.isCodeFetching = false
     if (data.status === 'success') {
       this.code = data.data
+      this.fetchComments()
     }
   }
 }

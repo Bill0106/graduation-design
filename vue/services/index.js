@@ -92,6 +92,15 @@ class Services {
   createCode(code) {
     return axios.post('/codes', code)
   }
+
+  getComments(params) {
+    const { limit, page, codeId } = params
+    return axios.get(`/comments?codeId=${codeId}&limit=${limit}&page=${page}`)
+  }
+
+  createComment(comment) {
+    return axios.post('/comments', comment)
+  }
 }
 
 export default new Services()
