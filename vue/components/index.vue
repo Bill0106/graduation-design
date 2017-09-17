@@ -1,16 +1,16 @@
 <template>
   <el-card class="box-card full-width">
     <div class="index-list-search">
-      <el-select v-model="codeType" size="small" placeholder="请选择代码类型" @change="handleCodeTypeChange">
+      <el-select v-model="codeType" size="small" placeholder="请选择代码类型" clearable @change="handleCodeTypeChange">
         <el-option
           v-for="(item, key) in codeTypes"
           :key="key"
-          :value="item.value"
-          :label="item.label"
+          :value="item.name"
+          :label="item.name"
         >
         </el-option>
       </el-select>
-      <el-select v-model="platform" size="small" placeholder="请选择应用场景" @change="handlePlatformChange">
+      <el-select v-model="platform" size="small" placeholder="请选择应用场景" clearable @change="handlePlatformChange">
         <el-option
           v-for="(item, key) in platforms"
           :key="key"
@@ -39,7 +39,14 @@
       </div>
     </div>
     <div class="index-list-page">
-      <el-pagination layout="prev, pager, next" :total="4"></el-pagination>
+      <el-pagination
+        layout="prev, pager, next"
+        :total="total"
+        :page-size="limit"
+        :current-page="currentPage"
+        @current-change="handlePageChange"
+      >
+      </el-pagination>
     </div>
   </el-card>
 </template>
@@ -47,6 +54,7 @@
 <script>
 import moment from 'moment'
 import services from '@/services'
+import platforms from '@/constants/platforms'
 
 export default {
   name: 'index',
@@ -54,44 +62,12 @@ export default {
     return {
       codeList: [],
       total: 0,
+      limit: 30,
+      currentPage: 1,
       codeType: '',
-      codeTypes: [
-        {
-          label: 'JavaScript',
-          value: 'JavaScript'
-        },
-        {
-          label: 'PHP',
-          value: 'PHP'
-        },
-        {
-          label: 'Java',
-          value: 'Java'
-        },
-        {
-          label: 'C#',
-          value: 'C#'
-        }
-      ],
+      codeTypes: [],
       platform: '',
-      platforms: [
-        {
-          label: '服务器端',
-          value: 'SERVER'
-        },
-        {
-          label: '浏览器端',
-          value: 'BROWSER'
-        },
-        {
-          label: '客户端',
-          value: 'CLIENT'
-        },
-        {
-          label: '移动端',
-          value: 'MOBILE'
-        }
-      ],
+      platforms,
       isFetching: false
     }
   },
@@ -113,27 +89,47 @@ export default {
     async fetchList() {
       this.isFetching = true
 
-      const res = await services.getCodes({ limit: 30, page: 1 })
+      const params = { limit: this.limit, page: this.currentPage }
+      if (this.codeType) {
+        params.codeType = this.codeType
+      }
+      if (this.platform) {
+        params.platform = this.platform
+      }
+
+      const res = await services.getCodes(params)
       const { data } = res
 
       this.isFetching = false
       if (data.status === 'success') {
         this.codeList = data.data.list
-        this.total = data.data.total
+        this.total = data.data.count
       }
     },
     handleCodeTypeChange(value) {
-      console.log(value)
+      this.currentPage = 1
+      this.fetchList()
     },
     handlePlatformChange(value) {
-      console.log(value)
+      this.currentPage = 1
+      this.fetchList()
+    },
+    handlePageChange(page) {
+      this.currentPage = page
+      this.fetchList()
     },
     handleCodeTitleClick(code) {
       this.$router.push({ name: 'codeDetail', params: { id: code.id } })
     }
   },
-  beforeMount() {
+  async beforeMount() {
     this.fetchList()
+
+    const res = await services.getCodeTypes()
+    const { data } = res
+    if (data.status === 'success') {
+      this.codeTypes = data.data.list
+    }
   }
 }
 </script>

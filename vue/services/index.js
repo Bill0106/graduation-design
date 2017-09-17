@@ -81,8 +81,11 @@ class Services {
   }
 
   getCodes(params) {
-    const { limit, page } = params
-    return axios.get(`/codes?limit=${limit}&page=${page}`)
+    const queryString = Object.entries(params)
+      .map(item => `${item[0]}=${item[1]}`)
+      .join('&')
+
+    return axios.get(`/codes?${queryString}`)
   }
 
   getCode(id) {

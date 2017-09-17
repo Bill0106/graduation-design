@@ -4,16 +4,28 @@ const CodeTypes = require('../models/CodeTypes')
 const controller = {
   list: async (req, res) => {
     try {
-      const limit = Number(req.query.limit) || 30
-      const page = Number(req.query.page) || 1
-      const offset = (page - 1) * limit
+      const { limit, page, codeType, platform } = req.query
+      const _limit = Number(limit) || 30
+      const _page = Number(page) || 1
+      const offset = (_page - 1) * _limit
 
-      const list = await Codes.find()
-        .limit(limit)
+      const query = {}
+      if (codeType) {
+        const codeTypeId = await CodeTypes.findOne({ name: codeType })
+        if (codeTypeId) {
+          query.codeTypeId = codeTypeId._id
+        }
+      }
+      if (platform) {
+        query.codePlatforms = platform
+      }
+
+      const list = await Codes.find(query)
+        .limit(_limit)
         .skip(offset)
         .populate('codeTypeId', 'name')
         .populate('userId', 'username')
-      const count = await Codes.count({})
+      const count = await Codes.count(query)
 
       res.send({
         status: 'success',
