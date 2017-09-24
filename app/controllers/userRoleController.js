@@ -35,8 +35,8 @@ const controller = {
 
   create: async (req, res) => {
     try {
-      const { role, roleName } = req.body
-      await UserRoles.create({ role, roleName })
+      const { role, roleName, permissionCodes } = req.body
+      await UserRoles.create({ role, roleName, permissionCodes })
       res.send({
         status: 'success',
         message: null
@@ -51,7 +51,7 @@ const controller = {
 
   update: async (req, res) => {
     try {
-      const { role, roleName } = req.body
+      const { role, roleName, permissionCodes } = req.body
       const userRole = await UserRoles.findById(req.params.id)
       if (!userRole) {
         throw new Error('user role not found')
@@ -59,6 +59,7 @@ const controller = {
 
       userRole.role = role
       userRole.roleName = roleName
+      userRole.permissionCodes = permissionCodes
 
       await userRole.save()
       res.send({
