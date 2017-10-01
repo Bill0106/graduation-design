@@ -7,19 +7,10 @@
       <el-table-column prop="permissions" label="权限"></el-table-column>
       <el-table-column label="操作">
         <template scope="scope">
-          <el-button
-            type="primary"
-            size="small"
-            @click="handleEdit(scope.row._id)"
-          >
+          <el-button type="primary" size="small" @click="handleEdit(scope.row._id)">
             编辑
           </el-button>
-          <el-button
-            type="danger"
-            size="small"
-            :loading="isDeleting"
-            @click="handleDelete(scope.row._id)"
-          >
+          <el-button type="danger" size="small" :loading="isDeleting" @click="handleDelete(scope.row._id)">
             删除
           </el-button>
         </template>
@@ -35,11 +26,7 @@
         </el-form-item>
         <el-form-item label="权限">
           <el-checkbox-group v-model="userRole.permissionCodes">
-            <el-checkbox
-              v-for="(item, index) in permissionCodes"
-              :key="index"
-              :label="item.value"
-            >
+            <el-checkbox v-for="(item, index) in permissionCodes" :key="index" :label="item.value">
               {{item.label}}
             </el-checkbox>
           </el-checkbox-group>
@@ -95,13 +82,12 @@ export default {
   methods: {
     async fetchList() {
       this.isFetching = true
-      const res = await services.getUserRoles()
-      const { data } = res
+      const { data } = await services.getUserRoles()
 
-      this.isFetching = false
       if (data.status === 'success') {
         this.userRoles = data.data.list
       }
+      this.isFetching = false
     },
     async handleSubmit() {
       const { id, role, roleName, permissionCodes } = this.userRole
@@ -113,9 +99,9 @@ export default {
         await services.createUserRole({ role, roleName, permissionCodes })
       }
 
-      this.isSaving = false
       this.userRole = { name: '', platforms: [] }
       this.dialogVisible = false
+      this.isSaving = false
       this.fetchList()
     },
     handleEdit(id) {

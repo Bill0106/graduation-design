@@ -97,20 +97,20 @@ export default {
         params.platform = this.platform
       }
 
-      const res = await services.getCodes(params)
-      const { data } = res
-
-      this.isFetching = false
+      const { data } = await services.getCodes(params)
       if (data.status === 'success') {
         this.codeList = data.data.list
         this.total = data.data.count
       }
+      this.isFetching = false
     },
     handleCodeTypeChange(value) {
+      this.codeType = value
       this.currentPage = 1
       this.fetchList()
     },
     handlePlatformChange(value) {
+      this.platform = value
       this.currentPage = 1
       this.fetchList()
     },
@@ -125,8 +125,7 @@ export default {
   async beforeMount() {
     this.fetchList()
 
-    const res = await services.getCodeTypes()
-    const { data } = res
+    const { data } = await services.getCodeTypes()
     if (data.status === 'success') {
       this.codeTypes = data.data.list
     }

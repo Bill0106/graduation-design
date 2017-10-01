@@ -26,7 +26,8 @@
         type="textarea"
         :rows="5"
         placeholder="请输入评论内容"
-        v-model="comment">
+        v-model="comment"
+      >
       </el-input>
       <div class="code-comment-submit">
         <el-button type="primary" @click="handleCommitSubmit">提交评论</el-button>
@@ -97,17 +98,16 @@ export default {
   methods: {
     async fetchComments() {
       this.isCommentsFetching = true
-      const res = await services.getComments({
+      const { data } = await services.getComments({
         limit: this.limit,
         page: this.currentPage,
         codeId: this.code._id
       })
-      const { data } = res
 
-      this.isCommentsFetching = false
       if (data.status === 'success') {
         this.comments = data.data.list
       }
+      this.isCommentsFetching = false
     },
     async handleCommitSubmit() {
       this.isSaving = true
@@ -118,14 +118,13 @@ export default {
   async beforeMount() {
     this.isCodeFetching = true
     const { id } = this.$route.params
-    const res = await services.getCode(id)
-    const { data } = res
+    const { data } = await services.getCode(id)
 
-    this.isCodeFetching = false
     if (data.status === 'success') {
       this.code = data.data
       this.fetchComments()
     }
+    this.isCodeFetching = false
   }
 }
 </script>

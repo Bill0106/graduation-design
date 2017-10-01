@@ -14,7 +14,7 @@
         <el-input v-model="form.confirmPassword" type="password"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" size="large" @click="handleSubmit">注册</el-button>
+        <el-button type="primary" size="large" :loading="isSaving" @click="handleSubmit">注册</el-button>
       </el-form-item>
     </el-form>
   </el-card>
@@ -56,21 +56,21 @@ export default {
             }
           }
         }
-      }
+      },
+      isSaving: false
     }
   },
   methods: {
     handleSubmit() {
-      this.$refs.signupForm.validate(valid => {
+      this.$refs.signupForm.validate(async valid => {
         if (valid) {
+          this.isSaving = true
           const { username, email, password } = this.form
-          services.signup({ username, email, password })
-            .then(res => {
-              const { data } = res
-              if (data.status === 'success') {
-                this.$router.push({ name: 'login' })
-              }
-            })
+          const { data } = await services.signup({ username, email, password })
+          if (data.status === 'success') {
+            this.$router.push({ name: 'login' })
+          }
+          this.isSaving = false
         } else {
           return false
         }

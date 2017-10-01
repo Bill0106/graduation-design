@@ -35,15 +35,13 @@ export default {
   methods: {
     async fetchList() {
       this.isFetching = true
+      const { data } = await services.getCodes({ limit: this.limit, page: this.page })
 
-      const res = await services.getCodes({ limit: this.limit, page: this.page })
-      const { data } = res
-
-      this.isFetching = false
       if (data.status === 'success') {
         this.codes = data.data.list
         this.total = data.data.count
       }
+      this.isFetching = false
     },
     handleDetailClick(id) {
       this.$router.push({ name: 'codeDetail', params: { id } })

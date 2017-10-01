@@ -8,7 +8,7 @@
         <el-input v-model="form.password" type="password"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" size="large" @click="handleSubmit">登录</el-button>
+        <el-button type="primary" size="large" :loading="isLogin" @click="handleSubmit">登录</el-button>
       </el-form-item>
     </el-form>
   </el-card>
@@ -25,19 +25,19 @@ export default {
       form: {
         email: '',
         password: ''
-      }
+      },
+      isLogin: false
     }
   },
   methods: {
-    handleSubmit() {
-      services.login(this.form)
-        .then(res => {
-          const { data } = res
-          if (data.status === 'success') {
-            Cookie.set('token', data.data.token, { expires: 7 })
-            window.location = '/'
-          }
-        })
+    async handleSubmit() {
+      this.isLogin = true
+      const { data } = await services.login(this.form)
+      if (data.status === 'success') {
+        Cookie.set('token', data.data.token, { expires: 7 })
+        window.location = '/'
+      }
+      this.isLogin = false
     }
   },
   beforeMount() {

@@ -73,19 +73,16 @@ export default {
   methods: {
     async handleSubmit() {
       this.isSaving = true
+      const { data } = await services.createCode(this.code)
 
-      const res = await services.createCode(this.code)
-      const { data } = res
-
-      this.isSaving = false
       if (data.status === 'success') {
         this.$router.push({ name: 'index' })
       }
+      this.isSaving = false
     }
   },
   async beforeMount() {
-    const res = await services.getCodeTypes()
-    const { data } = res
+    const { data } = await services.getCodeTypes()
     if (data.status === 'success') {
       this.codeTypes = data.data.list
     }

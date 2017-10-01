@@ -62,8 +62,7 @@ export default {
     }
   },
   async beforeMount() {
-    const res = await services.checkUser()
-    const { data } = res
+    const { data } = await services.checkUser()
     if (data.status === 'success') {
       this.user = data.data.user
     }

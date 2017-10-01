@@ -80,9 +80,8 @@ export default {
   methods: {
     async fetchUserList() {
       this.isFetching = true
+      const { data } = await services.getUsers()
 
-      const users = await services.getUsers()
-      const { data } = users
       if (data.status === 'success') {
         this.users = data.data.list
         this.total = data.data.total
@@ -91,27 +90,24 @@ export default {
     },
     handleEditRole(item) {
       this.dialogVisible = true
-
       this.userRole = item.role._id
       this.userId = item.id
     },
     async handleSubmit() {
       this.isSaving = true
+      const { data } = await services.changeUserRole(this.userId, this.userRole)
 
-      const res = await services.changeUserRole(this.userId, this.userRole)
-      const { data } = res
       if (data.status === 'success') {
         this.fetchUserList()
       }
-      this.isSaving = false
       this.dialogVisible = false
+      this.isSaving = false
     }
   },
   async beforeMount() {
     this.fetchUserList()
 
-    const res = await services.getUserRoles()
-    const { data } = res
+    const { data } = await services.getUserRoles()
     if (data.status === 'success') {
       this.userRoles = data.data.list
     }

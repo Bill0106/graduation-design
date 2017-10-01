@@ -67,8 +67,7 @@ export default {
     async fetchList() {
       this.isFetching = true
 
-      const res = await services.getCodeTypes()
-      const { data } = res
+      const { data } = await services.getCodeTypes()
 
       this.isFetching = false
       if (data.status === 'success') {
@@ -77,17 +76,18 @@ export default {
     },
     async handleSubmit() {
       const { id, name, platforms } = this.codeType
-      const service = id ? services.updateCodeType(id, { name, platforms }) : services.createCodeType({ name, platforms })
 
       this.isPosting = true
-      await service
-
-      this.isPosting = false
-      this.dialogVisible = false
-      this.codeType = {
-        name: '',
-        platforms: []
+      if (id) {
+        await services.updateCodeType(id, { name, platforms })
+      } else {
+        await services.createCodeType({ name, platforms })
       }
+
+      this.codeType = { name: '', platforms: [] }
+      this.dialogVisible = false
+      this.isPosting = false
+
       this.fetchList()
     },
     handleEdit(id) {
@@ -99,13 +99,11 @@ export default {
       }
       this.dialogVisible = true
     },
-    handleDelete(id) {
+    async handleDelete(id) {
       this.isDeleting = true
-      services.deleteCodeType(id)
-        .then(res => {
-          this.isDeleting = false
-          this.fetchList()
-        })
+      await services.deleteCodeType(id)
+      this.isDeleting = false
+      this.fetchList()
     }
   },
   beforeMount() {
