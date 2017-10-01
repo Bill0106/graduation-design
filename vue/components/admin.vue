@@ -19,12 +19,11 @@ import services from '@/services'
 export default {
   name: 'admin',
   async beforeRouteEnter(to, from, next) {
-    const res = await services.checkUser()
-    const { data } = res
+    const { data } = await services.checkUser()
 
     if (data.status === 'success') {
-      const user = data.data.user
-      if (user.role === 'ADMIN') {
+      const { user } = data.data
+      if (user.permissions.includes('ADMIN_DASHBOARD')) {
         next()
       } else {
         window.location = '/'

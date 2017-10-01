@@ -15,45 +15,41 @@ const codeTypesApiRouter = express.Router()
 const codesApiRouter = express.Router()
 const commentsApiRouter = express.Router()
 
-const checkAdmin = checkUser(['ADMIN'])
-const checkSuperUser = checkUser(['ADMIN', 'SUPER_USER'])
-const checkLogin = checkUser()
-
 usersApiRouter
   .get('/', userController.list)
   .post('/', userController.create)
   .get('/:id', userController.find)
-  .post('/:id', checkLogin, userController.update)
-  .post('/:id/update-role', checkAdmin, userController.updateRole)
-  .post('/:id/remove', checkAdmin, userController.remove)
+  .post('/:id', checkUser(), userController.update)
+  .post('/:id/update-role', checkUser('USER_MANAGE'), userController.updateRole)
+  .post('/:id/remove', checkUser('USER_MANAGE'), userController.remove)
 
 userRolesApiRouter
   .get('/', userRoleController.list)
   .post('/', userRoleController.create)
   .get('/:id', userRoleController.find)
-  .post('/:id', checkAdmin, userRoleController.update)
-  .post('/:id/remove', checkAdmin, userRoleController.remove)
+  .post('/:id', checkUser('USER_ROLE_MANAGE'), userRoleController.update)
+  .post('/:id/remove', checkUser('USER_ROLE_MANAGE'), userRoleController.remove)
 
 codeTypesApiRouter
   .get('/', codeTypeController.list)
-  .post('/', checkAdmin, codeTypeController.create)
+  .post('/', checkUser('CODE_TYPE_MANAGE'), codeTypeController.create)
   .get('/:id', codeTypeController.find)
-  .post('/:id', checkAdmin, codeTypeController.update)
-  .post('/:id/remove', checkAdmin, codeTypeController.remove)
+  .post('/:id', checkUser('CODE_TYPE_MANAGE'), codeTypeController.update)
+  .post('/:id/remove', checkUser('CODE_TYPE_MANAGE'), codeTypeController.remove)
 
 codesApiRouter
   .get('/', codeController.list)
-  .post('/', checkSuperUser, codeController.create)
+  .post('/', checkUser('CODE_MANAGE'), codeController.create)
   .get('/:id', codeController.find)
-  .post('/:id', checkSuperUser, codeController.update)
-  .post('/:id/remove', checkSuperUser, codeController.remove)
+  .post('/:id', checkUser('CODE_MANAGE'), codeController.update)
+  .post('/:id/remove', checkUser('CODE_MANAGE'), codeController.remove)
 
 commentsApiRouter
   .get('/', commentController.list)
-  .post('/', checkLogin, commentController.create)
+  .post('/', checkUser(), commentController.create)
   .get('/:id', commentController.find)
-  .post('/:id', checkLogin, commentController.update)
-  .post('/:id/remove', checkLogin, commentController.remove)
+  .post('/:id', checkUser(), commentController.update)
+  .post('/:id/remove', checkUser(), commentController.remove)
 
 apiRouter
   .use('/users', usersApiRouter)

@@ -84,7 +84,7 @@ const controller = {
           user: {
             username: user.username,
             email: user.email,
-            role: user.userRoleId.role
+            permissions: user.userRoleId.permissionCodes
           }
         }
       })

@@ -13,8 +13,8 @@
             {{user.username}} <i class="el-icon-arrow-down el-icon--right"></i>
           </span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item v-if="user.role !== 'USER'" command="create">创建代码</el-dropdown-item>
-            <el-dropdown-item v-if="user.role === 'ADMIN'" command="admin">管理后台</el-dropdown-item>
+            <el-dropdown-item v-if="hasCodePermission" command="create">创建代码</el-dropdown-item>
+            <el-dropdown-item v-if="hasAdminPermission" command="admin">管理后台</el-dropdown-item>
             <el-dropdown-item command="logout">登出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -32,6 +32,14 @@ export default {
   data() {
     return {
       user: null
+    }
+  },
+  computed: {
+    hasAdminPermission() {
+      return this.user.permissions.includes('ADMIN_DASHBOARD')
+    },
+    hasCodePermission() {
+      return this.user.permissions.includes('CODE_MANAGE')
     }
   },
   methods: {

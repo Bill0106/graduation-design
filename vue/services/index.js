@@ -97,8 +97,11 @@ class Services {
   }
 
   getComments(params) {
-    const { limit, page, codeId } = params
-    return axios.get(`/comments?codeId=${codeId}&limit=${limit}&page=${page}`)
+    const queryString = Object.entries(params)
+      .map(item => `${item[0]}=${item[1]}`)
+      .join('&')
+
+    return axios.get(`/comments?${queryString}`)
   }
 
   createComment(comment) {

@@ -1,7 +1,7 @@
 const Logins = require('../models/Logins')
 const Users = require('../models/Users')
 
-const checkUser = roles => {
+const checkUser = permission => {
   return async (req, res, next) => {
     try {
       const token = req.headers['x-token']
@@ -11,7 +11,8 @@ const checkUser = roles => {
       }
 
       const user = await Users.findById(login.userId).populate('userRoleId')
-      if (roles && !roles.includes(user.userRoleId.role)) {
+      const { permissionCodes } = user.userRoleId
+      if (permission && !permissionCodes.includes(permission)) {
         throw new Error('no permission')
       }
 
