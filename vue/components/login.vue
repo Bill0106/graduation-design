@@ -31,13 +31,18 @@ export default {
   },
   methods: {
     async handleSubmit() {
-      this.isLogin = true
-      const { data } = await services.login(this.form)
-      if (data.status === 'success') {
-        Cookie.set('token', data.data.token, { expires: 7 })
-        window.location = '/'
+      try {
+        this.isLogin = true
+        const { data } = await services.login(this.form)
+        if (data.status === 'success') {
+          Cookie.set('token', data.data.token, { expires: 7 })
+          window.location = '/'
+        }
+        this.isLogin = false
+      } catch (error) {
+        this.isLogin = false
+        this.$message.error(error.message)
       }
-      this.isLogin = false
     }
   },
   beforeMount() {

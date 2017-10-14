@@ -72,13 +72,18 @@ export default {
   },
   methods: {
     async handleSubmit() {
-      this.isSaving = true
-      const { data } = await services.createCode(this.code)
+      try {
+        this.isSaving = true
+        const { data } = await services.createCode(this.code)
 
-      if (data.status === 'success') {
-        this.$router.push({ name: 'index' })
+        if (data.status === 'success') {
+          this.$router.push({ name: 'codeDetail', params: { id: data.data.id } })
+        }
+        this.isSaving = false
+      } catch (error) {
+        this.isSaving = false
+        this.$message.error(error.message)
       }
-      this.isSaving = false
     }
   },
   async beforeMount() {

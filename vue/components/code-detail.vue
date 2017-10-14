@@ -110,9 +110,15 @@ export default {
       this.isCommentsFetching = false
     },
     async handleCommitSubmit() {
-      this.isSaving = true
-      await services.createComment({ content: this.comment, codeId: this.code._id })
-      this.isSaving = false
+      try {
+        this.isSaving = true
+        await services.createComment({ content: this.comment, codeId: this.code._id })
+        this.isSaving = false
+        this.fetchComments()
+      } catch (error) {
+        this.isSaving = false
+        this.$message.error(error.message)
+      }
     }
   },
   async beforeMount() {

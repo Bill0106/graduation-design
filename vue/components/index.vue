@@ -87,22 +87,27 @@ export default {
   },
   methods: {
     async fetchList() {
-      this.isFetching = true
+      try {
+        this.isFetching = true
 
-      const params = { limit: this.limit, page: this.currentPage }
-      if (this.codeType) {
-        params.codeType = this.codeType
-      }
-      if (this.platform) {
-        params.platform = this.platform
-      }
+        const params = { limit: this.limit, page: this.currentPage }
+        if (this.codeType) {
+          params.codeType = this.codeType
+        }
+        if (this.platform) {
+          params.platform = this.platform
+        }
 
-      const { data } = await services.getCodes(params)
-      if (data.status === 'success') {
-        this.codeList = data.data.list
-        this.total = data.data.count
+        const { data } = await services.getCodes(params)
+        if (data.status === 'success') {
+          this.codeList = data.data.list
+          this.total = data.data.count
+        }
+        this.isFetching = false
+      } catch (error) {
+        this.$message.error(error.message)
+        this.isFetching = false
       }
-      this.isFetching = false
     },
     handleCodeTypeChange(value) {
       this.codeType = value

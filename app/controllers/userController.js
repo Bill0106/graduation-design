@@ -48,6 +48,11 @@ const controller = {
     try {
       const { username, email, password } = req.body
       const userRole = await UserRoles.findOne({ role: 'USER' })
+
+      if (password.length >= 6 || password.length <= 20) {
+        throw new Error('password length is not correct')
+      }
+
       await Users.create({
         username,
         email,

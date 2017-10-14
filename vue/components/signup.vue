@@ -64,13 +64,18 @@ export default {
     handleSubmit() {
       this.$refs.signupForm.validate(async valid => {
         if (valid) {
-          this.isSaving = true
-          const { username, email, password } = this.form
-          const { data } = await services.signup({ username, email, password })
-          if (data.status === 'success') {
-            this.$router.push({ name: 'login' })
+          try {
+            this.isSaving = true
+            const { username, email, password } = this.form
+            const { data } = await services.signup({ username, email, password })
+            if (data.status === 'success') {
+              this.$router.push({ name: 'login' })
+            }
+            this.isSaving = false
+          } catch (error) {
+            this.isSaving = false
+            this.$message.error(error.message)
           }
-          this.isSaving = false
         } else {
           return false
         }

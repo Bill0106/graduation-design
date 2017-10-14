@@ -94,14 +94,19 @@ export default {
       this.userId = item.id
     },
     async handleSubmit() {
-      this.isSaving = true
-      const { data } = await services.changeUserRole(this.userId, this.userRole)
+      try {
+        this.isSaving = true
+        const { data } = await services.changeUserRole(this.userId, this.userRole)
 
-      if (data.status === 'success') {
-        this.fetchUserList()
+        if (data.status === 'success') {
+          this.fetchUserList()
+        }
+        this.dialogVisible = false
+        this.isSaving = false
+      } catch (error) {
+        this.$message.error(error.message)
+        this.isSaving = false
       }
-      this.dialogVisible = false
-      this.isSaving = false
     }
   },
   async beforeMount() {

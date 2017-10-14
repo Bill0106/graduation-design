@@ -24,7 +24,7 @@
       </el-form>
       <div slot="footer">
         <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" :loading="isPosting" @click="handleSubmit">提交</el-button>
+        <el-button type="primary" :loading="isSaving" @click="handleSubmit">提交</el-button>
       </div>
     </el-dialog>
   </div>
@@ -45,7 +45,7 @@ export default {
       },
       dialogVisible: false,
       isFetching: false,
-      isPosting: false,
+      isSaving: false,
       isDeleting: false,
       platforms
     }
@@ -75,20 +75,25 @@ export default {
       }
     },
     async handleSubmit() {
-      const { id, name, platforms } = this.codeType
+      try {
+        const { id, name, platforms } = this.codeType
 
-      this.isPosting = true
-      if (id) {
-        await services.updateCodeType(id, { name, platforms })
-      } else {
-        await services.createCodeType({ name, platforms })
+        this.isSaving = true
+        if (id) {
+          await services.updateCodeType(id, { name, platforms })
+        } else {
+          await services.createCodeType({ name, platforms })
+        }
+
+        this.codeType = { name: '', platforms: [] }
+        this.dialogVisible = false
+        this.isSaving = false
+
+        this.fetchList()
+      } catch (error) {
+        this.$message.error(error.message)
+        this.isSaving = false
       }
-
-      this.codeType = { name: '', platforms: [] }
-      this.dialogVisible = false
-      this.isPosting = false
-
-      this.fetchList()
     },
     handleEdit(id) {
       const codeType = this.codeTypes.find(item => item._id === id)

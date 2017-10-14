@@ -66,7 +66,7 @@ const controller = {
         throw new Error('code type not found')
       }
 
-      await Codes.create({
+      const data = await Codes.create({
         title,
         code,
         codeTypeId,
@@ -76,7 +76,9 @@ const controller = {
 
       res.send({
         status: 'success',
-        data: null
+        data: {
+          id: data._id
+        }
       })
     } catch (error) {
       res.send({
@@ -109,7 +111,7 @@ const controller = {
 
       res.send({
         status: 'success',
-        data: null
+        data: codeData._id
       })
     } catch (error) {
       res.send({

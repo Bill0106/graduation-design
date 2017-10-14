@@ -90,19 +90,24 @@ export default {
       this.isFetching = false
     },
     async handleSubmit() {
-      const { id, role, roleName, permissionCodes } = this.userRole
+      try {
+        const { id, role, roleName, permissionCodes } = this.userRole
 
-      this.isSaving = true
-      if (id) {
-        await services.updateUserRole(id, { role, roleName, permissionCodes })
-      } else {
-        await services.createUserRole({ role, roleName, permissionCodes })
+        this.isSaving = true
+        if (id) {
+          await services.updateUserRole(id, { role, roleName, permissionCodes })
+        } else {
+          await services.createUserRole({ role, roleName, permissionCodes })
+        }
+
+        this.userRole = { name: '', platforms: [] }
+        this.dialogVisible = false
+        this.isSaving = false
+        this.fetchList()
+      } catch (error) {
+        this.$message.error(error.message)
+        this.isSaving = false
       }
-
-      this.userRole = { name: '', platforms: [] }
-      this.dialogVisible = false
-      this.isSaving = false
-      this.fetchList()
     },
     handleEdit(id) {
       const userRole = this.userRoles.find(item => item._id === id)
